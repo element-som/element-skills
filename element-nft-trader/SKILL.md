@@ -1,6 +1,6 @@
 ---
 name: element-trade
-description: Use when the user wants to list or buy an NFT, create or accept a bid or collection-wide offer, query public orders or their own listings/orders, cancel an Element order, specify a payment token such as USDT or USDC, ask for their trading wallet address, or provide a 0x contract address in a trading context on a supported Element EVM network.
+description: Use when the user wants to list or buy an NFT, create or accept a bid or offer, query public orders or their own listings/orders, cancel an Element order, specify a payment token such as USDT or USDC, ask for their trading wallet address, or provide a 0x contract address in a trading context on a supported Element EVM network.
 envs: ["ELEMENT_API_KEY", "ELEMENT_WALLET_PRIVATE_KEY"]
 requires: ["node", "jq"]
 ---
