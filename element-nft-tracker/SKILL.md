@@ -5,7 +5,7 @@ envs: ["ELEMENT_API_KEY"]
 credentials: ["ELEMENT_API_KEY"]
 primary_credential: "ELEMENT_API_KEY"
 requires: ["curl", "jq"]
-metadata: {"openclaw":{"emoji":"🌊","homepage":"https://github.com/beelzebub520/element-nft-tracker","primary_credential":"ELEMENT_API_KEY","requires":{"bins":["curl","jq"],"envs":["ELEMENT_API_KEY"],"credentials":["ELEMENT_API_KEY"]}}}
+metadata: {"openclaw":{"emoji":"🌊","homepage":"https://github.com/element-som/element-skills","primary_credential":"ELEMENT_API_KEY","requires":{"bins":["curl","jq"],"envs":["ELEMENT_API_KEY"],"credentials":["ELEMENT_API_KEY"]}}}
 ---
 
 # Element NFT Market 🌊
