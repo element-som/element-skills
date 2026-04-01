@@ -1,6 +1,8 @@
 import axios from "axios";
 import { OrderRequest } from "../element/order/orderTypes";
 import {
+  QueryMyOrdersParams,
+  QueryMyOrdersResponseData,
   API_HOST,
   ApiOption,
   Fees,
@@ -258,6 +260,45 @@ export async function queryOrders(
     return r.data?.data?.orders || [];
   }
   throw Error("queryOrders failed, " + r.data?.msg);
+}
+
+export async function queryMyOrders(
+  query: QueryMyOrdersParams,
+  option: ApiOption,
+  retries = 1,
+): Promise<QueryMyOrdersResponseData> {
+  const normalizedLimit = Number(query.limit ?? 20)
+  const safeLimit =
+    Number.isFinite(normalizedLimit) && normalizedLimit > 0
+      ? Math.min(normalizedLimit, 50)
+      : 20
+  const url =
+    toUrl(`/openapi/v1/account/orderList?chain=${option.chain}`, option) +
+    toKeyVal("wallet_address", query) +
+    toKeyVal("contract_address", query) +
+    toKeyVal("cursor", query) +
+    `&limit=${safeLimit}`
+
+  let r
+  try {
+    r = await instance({
+      method: "get",
+      url: url,
+      headers: { "x-api-key": option.apiKey },
+      timeout: TIME_OUT,
+    })
+  } catch (e) {
+    if (shouldRetry(e, retries)) {
+      console.log("queryMyOrders failed, " + e + ", now try again.")
+      await sleep(1000)
+      return queryMyOrders(query, option, retries - 1)
+    }
+    throw Error("queryMyOrders failed, " + e)
+  }
+  if (r.data?.code === 0) {
+    return r.data?.data || {}
+  }
+  throw Error("queryMyOrders failed, " + r.data?.msg)
 }
 
 function toUrl(path: string, option: ApiOption): string {

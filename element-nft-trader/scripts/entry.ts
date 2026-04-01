@@ -14,6 +14,8 @@ import {
   BatchBuyWithETHParams,
 } from "./code/index";
 import { ethers } from "ethers";
+import { queryMyOrders as queryMyOrdersApi } from "./code/src/api/openApi";
+import { QueryMyOrdersParams } from "./code/src/api/openApiTypes";
 
 const EXPLORER_URLS: Record<string, string> = {
   eth: "https://etherscan.io",
@@ -56,12 +58,6 @@ type OperationType =
   | "queryMyOrders"
   | "cancel"
   | "getAddress";
-
-interface QueryMyOrdersParams {
-  chain: string;
-  wallet_address?: string;
-  limit?: number | string;
-}
 
 interface InputParams {
   network?: Network;
@@ -756,32 +752,12 @@ async function handleQueryMyOrders(params: QueryMyOrdersParams) {
   }
 
   const credentials = await getCredentials();
-  const limit = Number(params.limit ?? 20);
-  const url = new URL(
-    "https://api.element.market/openapi/v1/account/orderList",
-  );
-  url.searchParams.set("chain", params.chain);
-  url.searchParams.set(
-    "limit",
-    String(Number.isFinite(limit) && limit > 0 ? limit : 20),
-  );
-  if (!isBlank(params.wallet_address)) {
-    url.searchParams.set("wallet_address", String(params.wallet_address));
-  }
-
-  const response = await fetch(url.toString(), {
-    headers: {
-      "X-Api-Key": credentials.apiKey,
-      accept: "application/json",
-    },
+  const payload = await queryMyOrdersApi(params, {
+    chain: params.chain,
+    isTestnet: false,
+    apiKey: credentials.apiKey,
   });
-
-  if (!response.ok) {
-    throw new Error(`queryMyOrders failed, status=${response.status}`);
-  }
-
-  const payload: any = await response.json();
-  const assetList = payload?.data?.assetList ?? [];
+  const assetList = payload?.assetList ?? [];
 
   log({
     status: "success",
@@ -789,8 +765,12 @@ async function handleQueryMyOrders(params: QueryMyOrdersParams) {
     chain: params.chain,
     usingDefaultAccount: isBlank(params.wallet_address),
     walletAddress: params.wallet_address ?? null,
+    contractAddress: params.contract_address ?? null,
+    cursor: params.cursor ?? null,
+    pageInfo: payload?.pageInfo ?? null,
     count: assetList.length,
     orders: assetList.map((item: any) => ({
+      cursor: item?.cursor ?? null,
       name: item?.asset?.name,
       tokenId: item?.asset?.tokenId,
       collection: item?.asset?.collection?.name,
@@ -798,7 +778,12 @@ async function handleQueryMyOrders(params: QueryMyOrdersParams) {
       price: item?.orderData?.accountOrder?.price,
       priceUSD: item?.orderData?.accountOrder?.priceUSD,
       side: item?.orderData?.accountOrder?.side,
+      saleKind: item?.orderData?.accountOrder?.saleKind,
       standard: item?.orderData?.accountOrder?.standard,
+      schema: item?.orderData?.accountOrder?.schema,
+      listingTime: formatUnixTimestamp(
+        item?.orderData?.accountOrder?.listingTime,
+      ),
       expirationTime: formatUnixTimestamp(
         item?.orderData?.accountOrder?.expirationTime,
       ),

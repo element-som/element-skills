@@ -60,3 +60,75 @@ export interface OrderQuery {
   // Number of orders to offset by (for pagination). Default value: 0
   offset?: number;
 }
+
+export interface QueryMyOrdersParams {
+  // Chain Name, eth is default.
+  chain: string;
+  // Wallet address (defaults to account address if empty).
+  wallet_address?: string;
+  // Contract address.
+  contract_address?: string;
+  // Cursor to retrieve the next page of assets
+  cursor?: string;
+  // Page size, max is 50, default 20
+  limit?: number | string;
+}
+
+export interface AccountOrderPageInfo {
+  startCursor?: string;
+  endCursor?: string;
+  hasPreviousPage?: string | boolean;
+  hasNextPage?: string | boolean;
+}
+
+export interface AccountOrderCollection {
+  name?: string;
+  slug?: string;
+  royalty?: number;
+  imageUrl?: string;
+  isVerified?: boolean;
+}
+
+export interface AccountOrderAsset {
+  chain?: string;
+  chainId?: string;
+  contractAddress?: string;
+  tokenId?: string;
+  name?: string;
+  supply?: number | string;
+  imagePreviewUrl?: string;
+  collection?: AccountOrderCollection;
+}
+
+export interface AccountOrderSummary {
+  chain?: string;
+  chainId?: string;
+  expirationTime?: number | string;
+  listingTime?: number | string;
+  maker?: string;
+  taker?: string;
+  side?: number | string;
+  saleKind?: number | string;
+  paymentToken?: string;
+  quantity?: string;
+  priceUSD?: number | string;
+  price?: number | string;
+  standard?: string;
+  contractAddress?: string;
+  tokenId?: string;
+  schema?: string;
+  extra?: string;
+}
+
+export interface AccountOrderListItem {
+  cursor?: string;
+  asset?: AccountOrderAsset;
+  orderData?: {
+    accountOrder?: AccountOrderSummary;
+  };
+}
+
+export interface QueryMyOrdersResponseData {
+  pageInfo?: AccountOrderPageInfo;
+  assetList?: Array<AccountOrderListItem>;
+}
