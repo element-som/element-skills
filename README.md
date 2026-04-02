@@ -4,7 +4,9 @@ A collection of OpenClaw skills for Element Market trading and market tracking.
 
 This repository is designed for users who want to install these skills from ClawHub and use them in OpenClaw.
 
-Copy the following prompt into OpenClaw to install both skills from ClawHub and check which environment variables still need to be configured.
+## Quick Start
+
+Copy the following prompt into OpenClaw. It will install both skills from ClawHub and then tell you which environment variables still need to be configured.
 
 ```text
 Install these two skills from ClawHub:
@@ -14,14 +16,14 @@ https://clawhub.ai/beelzebub520/element-nft-tracker
 After installation, check which required environment variables are missing and tell me what I need to configure before using them.
 ```
 
-## Available Skills
+## Skills
 
 ### Element NFT Trader
 
-Trade NFTs on Element Market from OpenClaw.
-
 ClawHub:
 [https://clawhub.ai/element-som/element-nft-trader](https://clawhub.ai/element-som/element-nft-trader)
+
+Use this skill for trading actions on Element Market.
 
 Supports:
 - Create NFT listings
@@ -35,10 +37,10 @@ Supports:
 
 ### Element NFT Tracker
 
-Track Element Market collections, wallet activity, and market data from OpenClaw.
-
 ClawHub:
 [https://clawhub.ai/beelzebub520/element-nft-tracker](https://clawhub.ai/beelzebub520/element-nft-tracker)
+
+Use this skill for read-only Element Market data and wallet monitoring.
 
 Supports:
 - Collection stats
@@ -48,24 +50,22 @@ Supports:
 - Contract-to-slug resolution
 - Recent wallet sales monitoring
 
-## Install in OpenClaw
+## Configuration
 
-Install the skills directly from ClawHub using the links above.
+Set the required environment variables in OpenClaw after installation.
 
-After installation, configure the required environment variables in your OpenClaw environment.
+### `element-nft-trader`
 
-### Required Environment Variables
+- `ELEMENT_API_KEY`: your Element API key for querying Element Market APIs and submitting order-related requests. You can create or manage it here: [https://element.market/apikeys](https://element.market/apikeys)
+- `ELEMENT_WALLET_PRIVATE_KEY`: the private key used locally to sign trading transactions and orders. Use a dedicated low-risk wallet instead of your primary wallet.
 
-#### `element-nft-trader`
-- `ELEMENT_API_KEY`
-- `ELEMENT_WALLET_PRIVATE_KEY`
+### `element-nft-tracker`
 
-#### `element-nft-tracker`
-- `ELEMENT_API_KEY`
+- `ELEMENT_API_KEY`: your Element API key for read-only Element Market queries. You can create or manage it here: [https://element.market/apikeys](https://element.market/apikeys)
 
-## Usage Overview
+## How To Use
 
-Use `element-nft-trader` for real trading actions and order management on Element Market.
+Use `element-nft-trader` for real trading actions and order management.
 
 Examples:
 - "List this NFT for sale on Element"
@@ -86,34 +86,38 @@ Examples:
 
 ## Example Prompts
 
-### Trader examples
+### Trader
+
 - "List token #1 from collection `0x...` for 0.1 ETH on Base"
 - "Query current sell orders for collection `0x...` on Ethereum"
 - "Place a collection offer on Base for 50 USDC"
 - "Accept the best offer for token #12 on this collection"
 - "Cancel my active order on BSC"
 
-### Tracker examples
+### Tracker
+
 - "Show collection stats for this Element slug on Ethereum"
 - "Show the top ranked collections on Base"
 - "Check this wallet's NFT portfolio on BSC"
 - "Did this wallet have any recent sales activity?"
 - "Find the Element slug for this contract address"
 
-## Notes on Behavior
+## Behavior Notes
 
 ### `element-nft-trader`
-- This skill is designed for real order creation and execution.
+
+- This skill is intended for real order creation and execution.
 - State-changing actions require explicit confirmation before execution.
-- It uses a local private key for signing.
-- It is intended for supported Element EVM networks.
+- The private key is used for local signing.
+- This skill is intended for supported Element EVM networks.
 
 ### `element-nft-tracker`
+
 - This skill is read-only.
 - Wallet-related queries require explicit user consent before execution.
 - It uses the Element API for collection and account-level data lookups.
 
-## Important Safety Notes
+## Safety Notes
 
 - Never use your primary wallet for testing.
 - Use a dedicated low-risk wallet for `element-nft-trader`.
@@ -129,7 +133,6 @@ Examples:
 
 ## Who This Repository Is For
 
-This repository is for:
 - OpenClaw users who want to install Element-related skills through ClawHub
-- users who want trading and tracking separated into distinct skills
-- users who want reusable skills instead of writing prompts from scratch each time
+- Users who want trading and tracking separated into distinct skills
+- Users who want reusable skills instead of writing prompts from scratch each time
